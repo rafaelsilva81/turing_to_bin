@@ -161,12 +161,17 @@ const calculateBinaryConversion = async (contentJson: any): Promise<string> => {
   // Believe my types (sorry, i'm in a rush for this small project)
 
   const states = contentJson.structure.automaton.state;
+  // check if q0 exists
+  const hasQ0 = states.find((state: any) => state._attributes.name === 'q0');
+
   for (let i = 0; i < states.length; i++) {
     let nameState = states[i]._attributes.name;
     let idState = states[i]._attributes.id;
     // get number from the name of state
     let number = nameState.split('q').pop();
-    globalStateMap[idState] = '0'.repeat(Number(number));
+    let partial = '0'.repeat(Number(number));
+    partial += hasQ0 ? '0' : '';
+    globalStateMap[idState] = partial;
   }
 
   console.log(globalStateMap);
