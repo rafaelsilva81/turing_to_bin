@@ -75,7 +75,7 @@ const uploadFile = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  /* console.log(contentJson); */
+  console.log(contentJson);
   let result = await calculateBinaryConversion(contentJson);
   res.status(200).json(result);
 };
@@ -128,7 +128,7 @@ const getPartialBinary = async (transition: any): Promise<string> => {
     '1' +
     moveBinary;
 
-  /*   console.log(
+  console.log(
     'de:' +
       from +
       ' para:' +
@@ -152,7 +152,7 @@ const getPartialBinary = async (transition: any): Promise<string> => {
       writeBinary +
       ' move:' +
       moveBinary
-  ); */
+  );
   return res;
 };
 
@@ -163,9 +163,10 @@ const calculateBinaryConversion = async (contentJson: any): Promise<string> => {
   const states = contentJson.structure.automaton.state;
   for (let i = 0; i < states.length; i++) {
     let nameState = states[i]._attributes.name;
+    let idState = states[i]._attributes.id;
     // get number from the name of state
     let number = nameState.split('q').pop();
-    globalStateMap[i + 1] = '0'.repeat(Number(number));
+    globalStateMap[idState] = '0'.repeat(Number(number));
   }
 
   console.log(globalStateMap);
