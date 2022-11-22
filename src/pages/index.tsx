@@ -51,6 +51,15 @@ export default function Home() {
             className='bg-sky-500 p-2 rounded-md hover:bg-sky-600 transition ease-in-out'>
             Convert
           </button>
+
+          <span className='text-sm text-white font-semibold'>
+            author: {''}
+            <a
+              href='https://rafaeldev.me'
+              className='font-bold hover:text-blue-600 transition ease-in-out'>
+              @rafaelsilva81
+            </a>
+          </span>
         </form>
       </main>
     </div>
