@@ -6,6 +6,9 @@ import { xml2json } from 'xml-js';
 
 let globalLastRead = ['0', '0', '0'];
 let globalLastWrite = ['0', '0', '0'];
+let globalStateMap: {
+  [key: string]: string;
+} = {};
 
 type JFFFile = {
   fields: {};
@@ -97,14 +100,14 @@ const getPartialBinary = async (transition: any): Promise<string> => {
   /* in order of the partial result */
 
   /* fromBinary = from * '0' + '0' */
-  const fromBinary = '0'.repeat(Number(from)) + '0';
+  const fromBinary = globalStateMap[from];
 
   /* readBinary = 0 if read==0, 00 if read==1, 000 if read==undefined, create new variables for unkown values */
   let lastZero = ['0', '0', '0']; // this is undefined for the read value
   const readBinary = getBinValue(read, 'read');
 
   /*  toBinary = from * '0' + '0' (Exactly like fromBinary) */
-  const toBinary = '0'.repeat(Number(to)) + '0';
+  const toBinary = globalStateMap[to];
 
   /* same as read */
   const writeBinary = getBinValue(write, 'write');
@@ -124,7 +127,7 @@ const getPartialBinary = async (transition: any): Promise<string> => {
     '1' +
     moveBinary;
 
-  /*   console.log(
+  console.log(
     'de:' +
       from +
       ' para:' +
@@ -148,13 +151,23 @@ const getPartialBinary = async (transition: any): Promise<string> => {
       writeBinary +
       ' move:' +
       moveBinary
-  ); */
+  );
   return res;
 };
 
 const calculateBinaryConversion = async (contentJson: any): Promise<string> => {
   // I think i'm not gonna make the type for this.
   // Believe my types (sorry, i'm in a rush for this small project)
+
+  const states = contentJson.structure.automaton.state;
+  for (let i = 0; i < states.length; i++) {
+    let nameState = states[i]._attributes.name;
+    // get number from the name of state
+    let number = nameState.split('q').pop();
+    globalStateMap[i] = '0'.repeat(Number(number)) || '0';
+  }
+
+  console.log(globalStateMap);
 
   let res: string = '';
 
